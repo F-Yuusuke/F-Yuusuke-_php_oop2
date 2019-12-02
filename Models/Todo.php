@@ -39,6 +39,11 @@ class Todo
     // ２行目はindex.phpに入ったnameを取ってくるということ
       $stmt = $this->db_manager->dbh->prepare('INSERT INTO '.$this->table.'(name) VALUES (?)');
       $stmt->execute([$name]);
+    // ５４　ここの値を使うからリターンをしている
+    // ここで行なっているのは2つ
+    // データの登録と、最後に追加したレコードのidを取得
+    return $this->db_manager->dbh->lastInsertId();
+
     }
 
     public function all()

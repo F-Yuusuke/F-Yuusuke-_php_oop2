@@ -41,12 +41,15 @@ require_once ('function.php');
 </header>
 <main class="container py-5">
 <section>
-        <form class="form-row justify-content-center" action="create.php" method="POST">
+<!-- ５５　情報はphpではなくてJavaScriptで送るのでclassの後ろのものを消す -->
+        <form class="form-row justify-content-center" >
             <div class="col-10 col-md-6 py-2">
-                <input type="text" class="form-control" placeholder="ADD TODO" name="task">
+            <!-- ５６　inputに操作しやすいようにidをつける -->
+                <input type="text" class="form-control" placeholder="ADD TODO" name="task" id="js-task">
             </div>
             <div class="py-2 col-md-3 col-10">
-                <button type="submit" class="col-12 btn btn-primary">ADD</button>
+            <!-- ５７ 操作しやすいようにbuttonもid追加-->
+                <button type="submit" class="col-12 btn btn-primary" id="js-add-task">ADD</button>
             </div>
         </form>
 </section>
@@ -83,8 +86,11 @@ require_once ('function.php');
       </tbody>
   </table>
 </section>
-    </section>
-        
+    </section>       
 </main>
+<!-- ５２　ここでjQueryを読み込む　注意点はJavascriptより先にjQueryを読み込むこと-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- ５０ このファイルでapp.jsが使えるようにするために以下の処理をしている-->
+<script src="assets/js/app.js"></script>
 </body>
 </html>

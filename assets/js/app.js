@@ -1,101 +1,58 @@
-$(function () {
-
-    //削除
-
-    //idがjs-delete-btnで始まるIDがクリックされたとき
-    $(document).on('click', '[id^="js-delete-btn-"]', function (e) {
-        
-        //eはクリックされた要素
-        //クリックされた要素のデフォルトの機能(別ページへ飛ぶ)を無効にする
-        e.preventDefault();
-
-        //idを取得
-        //クリックされた要素のidの15文字目以降を取得
-        let id = $(this).attr('id').substr('14');
-
-        deleteTask(id);
-        
-    });
-
-
-    function deleteTask(id) {
-        //リクエスト先、HTTPメソッド、受け取るデータ型など指定
-        $.ajax({
-            url: 'delete.php?id=' + id,
-            type: 'GET',
-            dataType: 'json'
-        })
-        .then(
-            //成功した場合の処理
-            function (isDeleted) {
-                //削除が成功した場合はtrue, 失敗した場合はfalse
-                //app.js → delete.php → Todoクラスのdeleteメソッドという順番で実行される
-                //Todoクラスのdeleteメソッド → delete.php → app.jsという順番で結果が返ってくる
-                //返ってくる結果は(今回は)削除が成功したかどうか
-                //成功した場合はtrue, 失敗した場合はfalse
-                if (isDeleted) {
-                    //画面から削除
-                    deleteDOM(id);
-                }
-                
-            },
-            //失敗した場合の処理
-            function () {
-                console.log('error');
-            }
-        )
-    }
-
-    function deleteDOM(id) {
-        $('#js-task-' + id).remove();
-    }
-
-
-    //追加
+// ４８　初めにブランチを切ってajaxをブランチに作る
+// ４９　このapp.jsを作る
+// ５１JavaScriptが動いているか確認している　できていたら画面にぽんと
+// 表示される
+// alert()
+// ５３　　　　　　先にコードを読んでもらう処理はどこに行ったんですか？？？？？
+$(function(){
+// ５８　index.phpの最初の画面でADDがクリックされたら
     $(document).on('click', '#js-add-task', function (e) {
+    // 以下でGETで情報を取得するのをやめさせている
+    e.preventDefault();
+    let task = $('#js-task')
+    //　　　　　　　　 varで情報を取っていたと思っていたけどどこにもvalueがなかった
+    createTask(task.val())
+});
 
-        e.preventDefault();
-        let task = $('#js-task')
-        
-        createTask(task.val());
-        
-        //入力欄を空にする
-        task.val('');
-    });
+// ５９　ここではCDNのなかにある$.ajaxを呼び出してきている
+// そもそもこのファイルでやろうとしていることはグーグルマップのようにページを
+// 遷移しなくてもできるようになりたい
+// 繊維してしまうと固まった時に何もできなくなる（真っ白になるから）
+// だけどこの技術を使えば固まっても他のところを操作できる
+function createTask(task) {
+    $.ajax({
+        url: 'create.php',//ファイル名
+        type: 'POST',//レスポンスの種類
+        dataType: 'json',//これを使ったらphpの配列がjQueryの配列で情報が返ってくるので扱いやすい
+        data: {
+            task: task//格納される場所　　　　　これはどっちに格納されるんでスカ？？？？？？
+        }
+    })
+    .then(
+        //成功した時の処理
+        function (task) {
+            // ６３　ここは６０で書いたものを表示させている
+            // console.log(task);
+            renderTask(task)
+        },
+        //失敗したら
+        function () {
+        }
+    )
+}
 
-    function createTask(task) {
-        $.ajax({
-            url: 'create.php',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                task: task
-            }
-        })
-        .then(
-            function (task) {
-                renderTask(task);
-            },
-            function () {
-                console.log('error');
-            }
-        )        
-    }
-
-    //画面に追加したtaskを表示する
-    function renderTask(task) {
-        $('tbody').prepend(
-            `<tr id="js-task-${task.id}">` +
-            `<td>${task.name}</td>` +
-            `<td>${task.due_date}</td>` +
-            `<td>` +
-                `<a class="text-success" href="edit.php?id=${task.id}">EDIT</a>` +
-            `</td>` +
-            `<td>` +
-                `<a class="text-danger" href="" id="js-delete-btn-${task.id}">DELETE</a>` +
-            `</td>` +
-        `</tr>`
-        );
-    }
-
-})
+// ６０　まずはここに追加　画面に追加したtaskを表示する
+function renderTask(task) {
+// appendは後ろに追加　prependは前に追加
+// tbodyに追加するよってこと
+// JavaScriptでは``を使うと変数をなかに入れることができる
+$('tbody').append(
+    // ６４　日付も表示できるようにしている
+    `<tr><td>${task.name}</td>
+        <td>${task.due_date}</td>
+        <td></td>
+        <td></td>
+    </tr>`
+        )
+    }      
+});
