@@ -85,6 +85,8 @@ class Todo
     {
         $stmt = $this->db_manager->dbh->prepare('DELETE FROM'.$this->table.'WHERE id= ?');
         $stmt->execute([$id]);
+     // ６７ リターンを追加　削除したものの値が欲しい、後から処理をしたいから
+    return $stmt->execute([$id]);
     }
 }
 

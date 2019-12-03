@@ -20,7 +20,17 @@ $todo = new Todo();
 $todo->update($id);
 
 // ４７　登録した後にトップのページに戻るためだけに以下を書いた
-header('Location: index.php');
+// ７７　下記を削除画面遷移しないのでコメントアウト
+// header('Location: index.php');
+
+// ７８　classTodoのcreateメソッドを実行
+$res = $todo->delete($id);
+
+// ７９　１２月３日
+// 上記で値を取ってきてその値を取得している
+// ここでphpを抜けたい　jsに戻りたいから
+echo json_encode($res);
+exit();
 
 // ここのファイルではupdate.phpやcreate.phpと同じことをしている
 // 今日は４７で完
